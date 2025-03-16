@@ -23,7 +23,7 @@ async function getDiscordId(githubUsername) {
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
     const rows = await sheet.getRows();
-    console.log(`✅ Connected Sheet: ${doc.title}`);
+    console.log(`✅ Connected to Sheet: ${doc.title}`);
     console.log(`📜 Found ${rows.length} rows in the sheet`);
    // console.log("📄 Found rows:", rows.map(row => row._rawData));
     for (let row of rows) {
