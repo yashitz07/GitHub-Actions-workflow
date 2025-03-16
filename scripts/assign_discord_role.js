@@ -7,6 +7,8 @@ dotenv.config();
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const credentials  = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+const EVENT_NAME = process.env.GITHUB_EVENT_NAME;
+const EVENT_ACTION = process.env.GITHUB_EVENT_ACTION;
 console.log("🔍 Parsed Client Email:", credentials.client_email);
 console.log("🔍 First 50 chars of Private Key:", credentials.private_key.substring(0, 50));
 
@@ -37,9 +39,23 @@ async function getDiscordId(githubUsername) {
 
 async function assignDiscordRole(discordId) {
     const GUILD_ID = process.env.GUILD_ID;
-    const ROLE_ID = process.env.ROLE_ID;
+    let roleId;
 
-    const url = `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${ROLE_ID}`;
+    if (EVENT_NAME === "pull_request" && EVENT_ACTION === "closed") {
+        roleId = process.env.ROLE_ID_PR;
+        console.log("🟢 Assigning PR Merged Role");
+    } else if (EVENT_NAME === "issues" && EVENT_ACTION === "opened") {
+        roleId = process.env.ROLE_ID_ISSUE;
+        console.log("🟡 Assigning Issue Opened Role");
+    } else if (EVENT_NAME === "push") {
+        roleId = process.env.ROLE_ID_COMMIT;
+        console.log("🔵 Assigning Commit Pushed Role");
+    } else {
+        console.log("❌ Event does not match PR merge, issue open, or commit push.");
+        return;
+    }
+
+    const url = `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${roleId}`;
     console.log(url);
     const headers = {
         "Authorization": `Bot ${DISCORD_BOT_TOKEN}`,
