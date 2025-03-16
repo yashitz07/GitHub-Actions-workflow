@@ -7,6 +7,8 @@ dotenv.config();
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const credentials  = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+console.log("🔍 Parsed Client Email:", credentials.client_email);
+console.log("🔍 First 50 chars of Private Key:", credentials.private_key.substring(0, 50));
 
 async function getDiscordId(githubUsername) {
     const serviceAccountAuth = new JWT({
