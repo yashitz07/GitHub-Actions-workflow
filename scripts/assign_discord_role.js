@@ -56,7 +56,6 @@ async function assignDiscordRole(discordId) {
     }
 
     const url = `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${roleId}`;
-    console.log(url);
     const headers = {
         "Authorization": `Bot ${DISCORD_BOT_TOKEN}`,
         "Content-Type": "application/json"
