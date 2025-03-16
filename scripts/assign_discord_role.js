@@ -53,7 +53,7 @@ async function assignDiscordRole(discordId) {
 }
 
 async function main() {
-    const githubUsername = process.env.GITHUB_ACTOR; // GitHub username from workflow
+    const githubUsername = process.env.ACTOR; // GitHub username from workflow
     console.log(`🔍 Searching for GitHub username: ${githubUsername}`);
     if (!githubUsername) {
         console.error("❌ GitHub username not found!");
