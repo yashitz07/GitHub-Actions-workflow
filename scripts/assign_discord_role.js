@@ -9,8 +9,8 @@ const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const credentials  = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
 const EVENT_NAME = process.env.GITHUB_EVENT_NAME;
 const EVENT_ACTION = process.env.GITHUB_EVENT_ACTION;
-console.log("🔍 Parsed Client Email:", credentials.client_email);
-console.log("🔍 First 50 chars of Private Key:", credentials.private_key.substring(0, 50));
+// console.log("Parsed Client Email:", credentials.client_email);
+// console.log("50 chars of Private Key:", credentials.private_key.substring(0, 50));
 
 async function getDiscordId(githubUsername) {
     const serviceAccountAuth = new JWT({
@@ -23,11 +23,11 @@ async function getDiscordId(githubUsername) {
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
     const rows = await sheet.getRows();
-    console.log(`✅ Connected to Sheet: ${doc.title}`);
-    console.log(`📜 Found ${rows.length} rows in the sheet`);
+    console.log(`✅ Connected to: ${doc.title}`);
+    // console.log(`📜 Found ${rows.length} rows in the sheet`);
    // console.log("📄 Found rows:", rows.map(row => row._rawData));
     for (let row of rows) {
-        console.log(`🔍 Checking row: ${row._rawData[0]} → ${row._rawData[1]}`);
+        // console.log(`🔍 Checking row: ${row._rawData[0]} → ${row._rawData[1]}`);
         if (row._rawData[0] === githubUsername) {
             console.log(`✅ Match found! Returning Discord ID: ${row._rawData[1]}`);
             return row._rawData[1];
@@ -83,7 +83,7 @@ async function main() {
         console.error(`❌ No Discord ID found for GitHub username: ${githubUsername}`);
         return;
     }
-    console.log(`✅ Found Discord ID: ${discordId}`);
+    // console.log(`✅ Found Discord ID: ${discordId}`);
     await assignDiscordRole(discordId);
 }
 
