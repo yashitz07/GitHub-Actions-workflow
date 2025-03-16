@@ -24,7 +24,7 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
-          ACTOR: ${{ secrets.ACTOR }}
+          ACTOR: ${{ github.actor }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
           ROLE_ID: ${{ secrets.ROLE_ID }}
         run: node scripts/assign_discord_role.js
