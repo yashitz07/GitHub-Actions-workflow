@@ -16,11 +16,11 @@ async function testGoogleSheets() {
       spreadsheetId: sheetId,
       range: "Sheet1!A1:B5",
     });
-
-    console.log("✅ Google Sheets API Test Successful!");
+    // done
+    console.log(" Google Sheets API Test Successful!");
     console.table(response.data.values);
   } catch (error) {
-    console.error("❌ Google Sheets API Test Failed!", error);
+    console.error("Google Sheets API Test Failed!", error);
   }
 }
 

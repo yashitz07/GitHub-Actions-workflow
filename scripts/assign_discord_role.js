@@ -11,10 +11,10 @@ const ACTOR = process.env.ACTOR;
 
 async function main() {
   console.log(`🔍 Searching for GitHub username: ${ACTOR}`);
-  if (!ACTOR) return console.error("❌ GitHub username not found!");
+  if (!ACTOR) return console.error(" GitHub username not found!");
 
   const discordId = await getDiscordId(ACTOR);
-  if (!discordId) return console.error(`❌ No Discord ID found for ${ACTOR}`);
+  if (!discordId) return console.error(`No Discord ID found for ${ACTOR}`);
 
   await assignRole(discordId, EVENT_NAME, EVENT_ACTION);
 }
