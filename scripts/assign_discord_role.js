@@ -10,8 +10,8 @@ const EVENT_ACTION = process.env.GITHUB_EVENT_ACTION;
 const ACTOR = process.env.ACTOR;
 
 async function main() {
-  console.log(`🔍 Searching for GitHub username: ${ACTOR}`);
-  if (!ACTOR) return console.error(" GitHub username not found!");
+  console.log(`Searching for GitHub username: ${ACTOR}`);
+  if (!ACTOR) return console.error("GitHub username not found!");
 
   const discordId = await getDiscordId(ACTOR);
   if (!discordId) return console.error(`No Discord ID found for ${ACTOR}`);

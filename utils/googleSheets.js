@@ -19,7 +19,7 @@ async function getDiscordId(githubUsername) {
     const row = rows.find((row) => row._rawData[0] === githubUsername);
 
     if (row) {
-      console.log(` Found Discord ID: ${row._rawData[1]}`);
+      console.log(`Found Discord ID: ${row._rawData[1]}`);
       return row._rawData[1];
     } else {
       console.log(`No match found for GitHub username: ${githubUsername}`);

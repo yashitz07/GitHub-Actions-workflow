@@ -17,7 +17,7 @@ async function testGoogleSheets() {
       range: "Sheet1!A1:B5",
     });
     // done
-    console.log(" Google Sheets API Test Successful!");
+    console.log("Google Sheets API Test Successful!");
     console.table(response.data.values);
   } catch (error) {
     console.error("Google Sheets API Test Failed!", error);
