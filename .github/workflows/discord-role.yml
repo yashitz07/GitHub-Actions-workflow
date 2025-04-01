@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   assign-role:
     runs-on: ubuntu-latest
@@ -21,7 +22,7 @@ jobs:
           node-version: 16
 
       - name: Install Dependencies
-        run: npm install axios google-spreadsheet dotenv
+        run: npm install
 
       - name: Assign Discord Role
         env:
