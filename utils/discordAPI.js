@@ -25,7 +25,7 @@ async function assignRole(discordId, event, action) {
 
   try {
     await axios.put(url, {}, { headers });
-    console.log(`Role "${roleName}"  assigned to Discord user: ${discordId}`);
+    console.log(`Role "${roleName}"  assigned to Discord user(change pr test): ${discordId}`);
   } catch (error) {
     console.error("Error assigning role:", error.response?.data || error.message);
   }
