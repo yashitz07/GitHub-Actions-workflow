@@ -3,28 +3,7 @@ name: Assign Discord Role
 on:
   workflow_call:
     inputs:
-      DISCORD_BOT_TOKEN:
-        required: true
-        type: string
-      GOOGLE_CREDENTIALS_JSON:
-        required: true
-        type: string
-      GOOGLE_SHEET_ID:
-        required: true
-        type: string
       ACTOR:
-        required: true
-        type: string
-      GUILD_ID:
-        required: true
-        type: string
-      ROLE_ID_PR:
-        required: true
-        type: string
-      ROLE_ID_ISSUE:
-        required: true
-        type: string
-      ROLE_ID_COMMIT:
         required: true
         type: string
       GITHUB_EVENT_NAME:
@@ -33,6 +12,21 @@ on:
       GITHUB_EVENT_ACTION:
         required: true
         type: string
+    secrets:
+      DISCORD_BOT_TOKEN:
+        required: true
+      GOOGLE_CREDENTIALS_JSON:
+        required: true
+      GOOGLE_SHEET_ID:
+        required: true
+      GUILD_ID:
+        required: true
+      ROLE_ID_PR:
+        required: true
+      ROLE_ID_ISSUE:
+        required: true
+      ROLE_ID_COMMIT:
+        required: true
 
 jobs:
   assign-role:
@@ -51,14 +45,14 @@ jobs:
 
       - name: Assign Discord Role
         env:
-          DISCORD_BOT_TOKEN: ${{ inputs.DISCORD_BOT_TOKEN }}
-          GOOGLE_CREDENTIALS_JSON: ${{ inputs.GOOGLE_CREDENTIALS_JSON }}
-          GOOGLE_SHEET_ID: ${{ inputs.GOOGLE_SHEET_ID }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
           ACTOR: ${{ inputs.ACTOR }}
-          GUILD_ID: ${{ inputs.GUILD_ID }}
-          ROLE_ID_PR: ${{ inputs.ROLE_ID_PR }}
-          ROLE_ID_ISSUE: ${{ inputs.ROLE_ID_ISSUE }}
-          ROLE_ID_COMMIT: ${{ inputs.ROLE_ID_COMMIT }}
+          GUILD_ID: ${{ secrets.GUILD_ID }}
+          ROLE_ID_PR: ${{ secrets.ROLE_ID_PR }}
+          ROLE_ID_ISSUE: ${{ secrets.ROLE_ID_ISSUE }}
+          ROLE_ID_COMMIT: ${{ secrets.ROLE_ID_COMMIT }}
           GITHUB_EVENT_NAME: ${{ inputs.GITHUB_EVENT_NAME }}
           GITHUB_EVENT_ACTION: ${{ inputs.GITHUB_EVENT_ACTION }}
         run: node scripts/assign_discord_role.js
