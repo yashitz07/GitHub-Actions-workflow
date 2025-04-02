@@ -32,17 +32,14 @@ jobs:
   assign-role:
     runs-on: ubuntu-latest
     steps:
-      - name: Log Start of Workflow
-        run: echo "🚀 Starting Assign Discord Role Workflow"
-
-      - name: Log Inputs
-        run: |
-          echo "🔹 ACTOR: ${{ inputs.ACTOR }}"
-          echo "🔹 GITHUB_EVENT_NAME: ${{ inputs.GITHUB_EVENT_NAME }}"
-          echo "🔹 GITHUB_EVENT_ACTION: ${{ inputs.GITHUB_EVENT_ACTION }}"
-
-      - name: Checkout Repository
+      - name: Checkout Repository (GitHub-Actions-workflow)
         uses: actions/checkout@v4
+        with:
+          repository: yashitz07/GitHub-Actions-workflow
+          ref: main  # Ensure it's fetching the correct branch
+
+      - name: Debug Repository Structure
+        run: ls -R
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -52,10 +49,8 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Log Before Running Script
-        run: echo "🛠 Running assign_discord_role.js"
-
       - name: Assign Discord Role
+        run: node scripts/assign_discord_role.js
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
@@ -67,7 +62,3 @@ jobs:
           ROLE_ID_COMMIT: ${{ secrets.ROLE_ID_COMMIT }}
           GITHUB_EVENT_NAME: ${{ inputs.GITHUB_EVENT_NAME }}
           GITHUB_EVENT_ACTION: ${{ inputs.GITHUB_EVENT_ACTION }}
-        run: node scripts/assign_discord_role.js
-
-      - name: Log Completion
-        run: echo "✅ Finished Running assign_discord_role.js"
