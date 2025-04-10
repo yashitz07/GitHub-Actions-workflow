@@ -20,14 +20,18 @@ async function assignRole(discordId, event, action) {
     return;
   }
 
-  const url = `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${roleId}`;
+  const roleUrl = `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${roleId}`;
+  const userUrl = `https://discord.com/api/v10/users/${discordId}`;
   const headers = { Authorization: `Bot ${DISCORD_BOT_TOKEN}`, "Content-Type": "application/json" };
 
   try {
-    await axios.put(url, {}, { headers });
-    console.log(`Role "${roleName}"  assigned to Discord user: ${discordId}`);
+    const userRes = await axios.get(userUrl, { headers });
+    const discordUsername = userRes.data.username + "#" + userRes.data.discriminator;
+
+    await axios.put(roleUrl, {}, { headers });
+    console.log(`✅ Role "${roleName}" assigned to Discord user: ${discordUsername} (${discordId})`);
   } catch (error) {
-    console.error("Error assigning role:", error.response?.data || error.message);
+    console.error("❌ Error assigning role:", error.response?.data || error.message);
   }
 }
 

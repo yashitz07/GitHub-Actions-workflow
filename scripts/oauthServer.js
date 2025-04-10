@@ -5,28 +5,41 @@ const { appendMappingToSheet } = require('../utils/googleSheets');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-// Redirects user to GitHub OAuth with Discord ID stored in state param
-app.get('/oauth', (req, res) => {
+async function getDiscordUsername(discordId) {
+  try {
+    const res = await axios.get(`https://discord.com/api/v10/users/${discordId}`, {
+      headers: {
+        Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+      },
+    });
+    return `${res.data.username}#${res.data.discriminator}`;
+  } catch (err) {
+    console.error("⚠️ Could not fetch Discord username:", err.response?.data || err.message);
+    return discordId; 
+  }
+}
+
+app.get('/oauth', async (req, res) => {
   const discord_id = req.query.discord_id;
-  console.log(`🔗 Redirecting to GitHub OAuth for Discord ID: ${discord_id}`);
   if (!discord_id) {
     return res.status(400).send('❌ Missing Discord ID in query. Try again from the /verify command.');
   }
 
+  const discordUser = await getDiscordUsername(discord_id);
   const redirect_uri = `${process.env.BASE_URL}/oauth/callback`;
-
-  const githubOAuthUrl = `https://github.com/login/oauth/authorize` +
+  const githubOAuthUrl =
+    `https://github.com/login/oauth/authorize` +
     `?client_id=${process.env.GH_CLIENT_ID}` +
     `&redirect_uri=${encodeURIComponent(redirect_uri)}` +
     `&state=${discord_id}` +
     `&scope=read:user`;
 
-  console.log(`🔗 Redirecting to GitHub OAuth for Discord ID: ${discord_id}`);
+  console.log(`🔗 Redirecting Discord user: ${discordUser} → GitHub OAuth`);
   res.redirect(githubOAuthUrl);
 });
 
-// GitHub redirects here after user logs in and authorizes
 app.get('/oauth/callback', async (req, res) => {
   const code = req.query.code;
   const discord_id = req.query.state;
@@ -36,13 +49,13 @@ app.get('/oauth/callback', async (req, res) => {
   }
 
   try {
-    console.log(`🎯 GitHub OAuth callback received for Discord ID: ${discord_id}`);
+    const discordUser = await getDiscordUsername(discord_id);
+    console.log(`🎯 OAuth callback received for Discord user: ${discordUser}`);
 
-    // Exchange code for access token
     const tokenRes = await axios.post(`https://github.com/login/oauth/access_token`, {
       client_id: process.env.GH_CLIENT_ID,
       client_secret: process.env.GH_CLIENT_SECRET,
-      code
+      code,
     }, {
       headers: { 'Accept': 'application/json' }
     });
@@ -50,7 +63,6 @@ app.get('/oauth/callback', async (req, res) => {
     const token = tokenRes.data.access_token;
     if (!token) throw new Error("Failed to retrieve GitHub token");
 
-    // Fetch GitHub profile
     const userRes = await axios.get('https://api.github.com/user', {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -58,13 +70,10 @@ app.get('/oauth/callback', async (req, res) => {
     const github_username = userRes.data.login;
     if (!github_username) throw new Error("GitHub user not found");
 
-    // Append to Google Sheet
     await appendMappingToSheet(discord_id, github_username);
-    console.log(`✅ Linked: ${github_username} → ${discord_id}`);
+    console.log(`✅ Linked: ${discordUser} (Discord user) ←→ ${github_username} (Github user)`);
 
-    // Respond to user
-    res.send(`<h2>✅ You’ve successfully linked GitHub with Discord!</h2>`);
-
+    res.send(`<h2>✅ GitHub <code>${github_username}</code> successfully linked with Discord <code>${discordUser}</code></h2>`);
   } catch (error) {
     console.error("❌ Error during OAuth callback:", error);
     res.status(500).send("❌ An error occurred during GitHub OAuth process.");
