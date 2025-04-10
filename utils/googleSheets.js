@@ -7,7 +7,7 @@ const sheetId = process.env.GOOGLE_SHEET_ID;
 const auth = new JWT({
   email: credentials.client_email,
   key: credentials.private_key.replace(/\\n/g, "\n"),
-  scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
 async function getDiscordId(githubUsername) {
@@ -31,4 +31,20 @@ async function getDiscordId(githubUsername) {
   }
 }
 
-module.exports = { getDiscordId };
+async function appendMappingToSheet(discordId, githubUsername) {
+  try {
+    const doc = new GoogleSpreadsheet(sheetId, auth);
+    await doc.loadInfo();
+    const sheet = doc.sheetsByIndex[0];
+    console.log(`➕ Adding row: ${githubUsername} → ${discordId}`);
+    await sheet.addRow({
+      "GitHub Username": githubUsername,
+      "Discord ID": discordId
+    });
+    console.log(`✅ Appended: ${githubUsername} → ${discordId}`);
+  } catch (error) {
+    console.error("Error appending to Google Sheets:", error);
+  }
+}
+
+module.exports = { getDiscordId, appendMappingToSheet };
