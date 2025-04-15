@@ -27,7 +27,7 @@ async function getDiscordUsername(discordId) {
     return `${username}#${discriminator}`;
   } catch (error) {
     console.error("⚠️ Failed to fetch Discord username:", error.response?.data || error.message);
-    return discordId; // fallback to ID if name fails
+    return discordId; 
   }
 }
 
@@ -53,7 +53,28 @@ async function getDiscordId(githubUsername) {
     return null;
   }
 }
+async function getGitHubUsername(discordId) {
+  try {
+    const doc = new GoogleSpreadsheet(sheetId, auth);
+    await doc.loadInfo();
+    const sheet = doc.sheetsByIndex[0];
+    const rows = await sheet.getRows();
+    const row = rows.find((row) => row._rawData[1] === discordId);
 
+    if (row) {
+      const githubUsername = row._rawData[0];
+      const discordUser = await getDiscordUsername(discordId);
+      console.log(`✅ Found GitHub: ${githubUsername} for Discord: ${discordUser}`);
+      return githubUsername;
+    } else {
+      console.log(`❌ No match found for Discord ID: ${discordId}`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error accessing Google Sheets:", error);
+    return null;
+  }
+}
 async function appendMappingToSheet(discordId, githubUsername) {
   try {
     const discordUser = await getDiscordUsername(discordId);
@@ -72,4 +93,4 @@ async function appendMappingToSheet(discordId, githubUsername) {
   }
 }
 
-module.exports = { getDiscordId, appendMappingToSheet };
+module.exports = { getDiscordId, appendMappingToSheet, getGitHubUsername };
