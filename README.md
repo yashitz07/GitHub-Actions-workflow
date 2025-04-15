@@ -6,22 +6,23 @@ It also supports secure **GitHub–Discord user verification** using **GitHub OA
 
 ---
 
-## Demo Video
-https://drive.google.com/file/d/1qEeLsoDKHaRfp8PQu5Pk4oSj3kU8iGSe/view?usp=drive_link
+### Demo Video (updated)
+https://drive.google.com/file/d/1G0ZvFuw5wlbjIjeiRPrmUpEwVu0dG4HH/view?usp=drive_link
 
 ---
-## 📌 Features
+### 📌 Features
 
-- 🔐 **OAuth-based GitHub–Discord Verification**
-- 🤖 **Automatic Role Assignment on PRs, Issues, and Commits**
-- 🧾 **Google Sheets Mapping** of GitHub usernames to Discord IDs(temporary)
-- 🤖 **GitHub Actions workflow that assigns roles automatically on**:
+-  **OAuth-based GitHub–Discord Verification**
+-  **Automatic Role Assignment on PRs, Issues, and Commits**
+-  **Google Sheets Mapping** of GitHub usernames to Discord IDs(temporary)
+-  **GitHub Actions workflow that assigns roles automatically on**:
           - Pull request merged
           - Issue opened
           - Push to develop branch (commit)
+- **/contributions Discord Command**: Let users check their GitHub stats in the GitHub organization
 ---
 
-## 🧪 Secrets Required (in the repo using the Action)
+### 🧪 Secrets Required (in the repo using the Action)
 
 Add these secrets in your repository settings (`Settings → Secrets → Actions`):
 
@@ -36,18 +37,32 @@ Add these secrets in your repository settings (`Settings → Secrets → Actions
 
 ---
 
-## 💬 `/verify` Slash Command
+### 💬 Slash Commands
 
-Users join the Discord server and type `/verify`. The bot will:
+#### `/verify`
+Securely links a Discord account with a GitHub username.
 
-1. Redirect them to a GitHub OAuth link.
-2. On successful GitHub login, their GitHub username is securely linked with their Discord ID.
-3. The mapping is stored in a protected Google Sheet.
-4. This mapping is later used by GitHub Actions to identify contributors and assign roles.
-
+**How it works:**
+1. User types `/verify` in the Discord server.
+2. Bot replies with a GitHub OAuth link.
+3. User logs into GitHub.
+4. GitHub username is retrieved and linked with the user's Discord ID.
 ---
 
-## ⚙️ Major Action Flow
+#### `/contributions <discord_username>`
+Fetches GitHub contribution stats for a user in the GitHub organization.
+
+**Usage Example:**
+```bash
+/contributions yashitz07
+```
+**How it works:**
+1. Bot fetches the GitHub username linked to the provided Discord tag.
+2. It then queries the GitHub API for: i)Pull Requests ii)Issues iii)Commits
+3. Responds in Discord with a summary of contributions.
+---
+
+### ⚙️ Major Action Flow
 
 1. **User makes a contribution** (commit, PR, or issue) on GitHub.
 2. **GitHub Action** is triggered in the consuming repo.
@@ -60,12 +75,12 @@ Users join the Discord server and type `/verify`. The bot will:
 
 ---
 
-## 📌 Status & Future Scope
+### 📌 Status & Future Scope
 
 This is my work so far for **Feature 1: Automated Role Assignment**.  
 The GitHub ↔ Discord user mapping is currently stored in a **Google Sheet** using a service account for ease of setup and testing.
 
-### 🔄 Future Scalability:
+#### 🔄 Future Scalability:
 - This mapping system is **temporary** and can be **migrated to a more scalable solution** such as:
   - **Firebase Firestore**
   - Or any other secure cloud-based database
