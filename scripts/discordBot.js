@@ -15,22 +15,22 @@
 
   client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
+
     if (interaction.commandName === 'verify') {
       const discordId = interaction.user.id;
       const url = `http://localhost:3000/oauth?discord_id=${discordId}`;
       try {
         await interaction.reply({
           content: `🔗 [Click here to verify GitHub account](${url})`,
-          ephemeral: true,
+          flags: 1 << 6, // ephemeral
         });
       } catch (err) {
         console.error("❌ Failed to reply to interaction:", err);
       }
-      //await interaction.reply({content: `[Click here to verify GitHub account](${url})`, ephemeral:true});
     }
     if (interaction.commandName === 'contributions') {
       const discordTag = interaction.options.getString('username'); // e.g., yash#1234
-      console.log("Discord Tag:", discordTag);
+      console.log("🔍 Discord Tag:", discordTag);
       await interaction.deferReply({ ephemeral: true });
     
       try {
@@ -47,16 +47,16 @@
         const matching = membersRes.data.find(
           m => m.user.username.toLowerCase() === discordTag.toLowerCase()
         );
-      //  console.log("Members fetched:", membersRes.data.map(m => `${m.user.username}#${m.user.discriminator}`));
+      //  console.log("Members fetched:", membersRes.data.map(m => ${m.user.username}#${m.user.discriminator}));
         if (!matching) {
           await interaction.editReply("❌ Could not find a Discord user with that tag.");
           return;
         }
     
-        const discordId = matching.user.id;
-    
-        const { fetchGitHubStats } = require('../utils/githubStats');
-        const { prs, issues, commits, githubUsername } = await fetchGitHubStats(discordId);
+      const discordId = matching.user.id;
+      console.log("🔍 Discord ID:", discordId);
+
+      const { prs, issues, commits, githubUsername } = await fetchGitHubStats(discordId);
     
         const stats = `📊 **GitHub Contributions for \`${githubUsername}\` in RUXAILAB:**
     - 🛠️ PRs: ${prs}

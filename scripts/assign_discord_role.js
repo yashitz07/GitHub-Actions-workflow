@@ -1,8 +1,5 @@
-const { GoogleSpreadsheet } = require("google-spreadsheet");
-const { JWT } = require("google-auth-library");
-const axios = require("axios");
 require("dotenv").config();
-const { getDiscordId } = require("../utils/googleSheets");
+const { getDiscordId } = require("../utils/firestore");
 const { assignRole } = require("../utils/discordAPI");
 
 const EVENT_NAME = process.env.GITHUB_EVENT_NAME;

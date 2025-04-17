@@ -1,25 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
-const { appendMappingToSheet } = require('../utils/googleSheets');
+const { setMapping, getDiscordUsername } = require('../utils/firestore');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-
-async function getDiscordUsername(discordId) {
-  try {
-    const res = await axios.get(`https://discord.com/api/v10/users/${discordId}`, {
-      headers: {
-        Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
-      },
-    });
-    return `${res.data.username}#${res.data.discriminator}`;
-  } catch (err) {
-    console.error("⚠️ Could not fetch Discord username:", err.response?.data || err.message);
-    return discordId; 
-  }
-}
 
 app.get('/oauth', async (req, res) => {
   const discord_id = req.query.discord_id;
@@ -70,8 +55,8 @@ app.get('/oauth/callback', async (req, res) => {
     const github_username = userRes.data.login;
     if (!github_username) throw new Error("GitHub user not found");
 
-    await appendMappingToSheet(discord_id, github_username);
-    console.log(`✅ Linked: ${discordUser} (Discord user) ←→ ${github_username} (Github user)`);
+    await setMapping(discord_id, github_username);
+    console.log(`✅ Linked: ${discordUser} (Discord user) ←→ ${github_username} (GitHub user)`);
 
     res.send(`<h2>✅ GitHub <code>${github_username}</code> successfully linked with Discord <code>${discordUser}</code></h2>`);
   } catch (error) {

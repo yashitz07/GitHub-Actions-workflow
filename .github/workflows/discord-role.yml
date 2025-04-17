@@ -15,9 +15,7 @@ on:
     secrets:
       DISCORD_BOT_TOKEN:
         required: true
-      GOOGLE_CREDENTIALS_JSON:
-        required: true
-      GOOGLE_SHEET_ID:
+      FIREBASE_CREDENTIALS_JSON:
         required: true
       GUILD_ID:
         required: true
@@ -53,8 +51,7 @@ jobs:
         run: node scripts/assign_discord_role.js
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
-          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
           ACTOR: ${{ inputs.ACTOR }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
           ROLE_ID_PR: ${{ secrets.ROLE_ID_PR }}

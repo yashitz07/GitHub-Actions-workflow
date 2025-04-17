@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { getGitHubUsername } = require('./googleSheets');
+const { getGitHubUsername } = require('./firestore');
 
 const ORG_NAME = 'RUXAILAB';
 
