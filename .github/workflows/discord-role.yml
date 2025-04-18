@@ -43,3 +43,4 @@ jobs:
           ROLE_ID_COMMIT_15: ${{ secrets.ROLE_ID_COMMIT_15 }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_ACTION: ${{ github.event.action || '' }}
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
