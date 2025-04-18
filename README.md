@@ -65,7 +65,7 @@ To use this system in **RUXAILAB** organization, you must set up the following s
 | `utils/discordAPI.js`                    | Assigns Discord roles based on contribution counts                     |
 
 
-### 📹 Demo (Coming Soon)
+### 📹 Demo
 
 A short video will be added here demonstrating:
 
