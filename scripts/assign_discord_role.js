@@ -5,7 +5,7 @@ const { assignRole } = require("../utils/discordAPI");
 const EVENT_NAME = process.env.GITHUB_EVENT_NAME;
 const EVENT_ACTION = process.env.GITHUB_EVENT_ACTION;
 const ACTOR = process.env.ACTOR;
-
+//test
 async function main() {
   console.log(`🔍 Searching for GitHub username: ${ACTOR}`);
   if (!ACTOR) return console.error("❌ GitHub username not found!");
