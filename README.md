@@ -1,91 +1,79 @@
-# 🔁 About the PR & Integration Setup
+### GitHub–Discord Role Automation for RUXAILAB
 
-This project integrates **GitHub Actions**, **Discord**, and **Google Sheets** to **automatically assign Discord roles** to contributors based on their GitHub activity such as merged PRs, opened issues, and commits.
+This project automates Discord role assignment and provides GitHub contribution analytics by connecting Discord users with their GitHub accounts via OAuth. It's designed for open-source organizations like **RUXAILAB** to easily manage and reward contributors based on PRs, issues, and commits.
 
-It also supports secure **GitHub–Discord user verification** using **GitHub OAuth** and maps verified users into Google Sheets.
+---
+### 🚀 Features
+
+| Feature                    | Description                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| 🔐 OAuth-Based Verification | Securely links GitHub usernames with Discord IDs using GitHub OAuth.        |
+| 📊 GitHub Contribution Stats | Fetches PRs, issues, and commit counts from organization repositories.      |
+| 🧠 Smart Role Assignment     | Automatically assigns roles based on thresholds (e.g., 1 PR → Beginner).     |
+| ⚡ Cached Contribution Stats | Uses Firestore to cache GitHub stats for faster role assignment.            |
+| ☁️ Cloud Firestore Integration | Stores GitHub–Discord mapping and contribution history.                    |
+| 🧾 Slack-like Slash Commands | Easy `/verify` and `/contributions` commands for users.                     |
 
 ---
 
-### Demo Video (updated)
-https://drive.google.com/file/d/1G0ZvFuw5wlbjIjeiRPrmUpEwVu0dG4HH/view?usp=drive_link
+### 📌 Role Assignment Table
 
----
-### 📌 Features
-
--  **OAuth-based GitHub–Discord Verification**
--  **Automatic Role Assignment on PRs, Issues, and Commits**
--  **Google Sheets Mapping** of GitHub usernames to Discord IDs(temporary)
--  **GitHub Actions workflow that assigns roles automatically on**:
-          - Pull request merged
-          - Issue opened
-          - Push to develop branch (commit)
-- **/contributions Discord Command**: Let users check their GitHub stats in the GitHub organization
----
-
-### 🧪 Secrets Required (in the repo using the Action)
-
-Add these secrets in your repository settings (`Settings → Secrets → Actions`):
-
-| Secret Key              | Description                                       |
-|-------------------------|---------------------------------------------------|
-| `DISCORD_BOT_TOKEN`     | Discord bot token                                 |
-| `DISCORD_CLIENT_ID`     | Your Discord server's client ID                    |
-| `GH_CLIENT_ID  `        | Github Client Id for OAuth                       |
-| `GH_CLIENT_SECRET`      | Github Client secret               |
-| `GOOGLE_SHEET_ID`       | ID of the Google Sheet storing mappings          |
-| `GOOGLE_CREDENTIALS_JSON`| Service account credentials (as JSON string)     |
-
----
-
-### 💬 Slash Commands
-
-#### `/verify`
-Securely links a Discord account with a GitHub username.
-
-**How it works:**
-1. User types `/verify` in the Discord server.
-2. Bot replies with a GitHub OAuth link.
-3. User logs into GitHub.
-4. GitHub username is retrieved and linked with the user's Discord ID.
----
-
-#### `/contributions <discord_username>`
-Fetches GitHub contribution stats for a user in the GitHub organization.
-
-**Usage Example:**
-```bash
-/contributions yashitz07
-```
-**How it works:**
-1. Bot fetches the GitHub username linked to the provided Discord tag.
-2. It then queries the GitHub API for: i)Pull Requests ii)Issues iii)Commits
-3. Responds in Discord with a summary of contributions.
----
-
-### ⚙️ Major Action Flow
-
-1. **User makes a contribution** (commit, PR, or issue) on GitHub.
-2. **GitHub Action** is triggered in the consuming repo.
-3. The action invokes a **workflow_call** to this repo’s role assignment logic.
-4. Inside `assign_discord_role.js`:
-   - GitHub username is used to look up the Discord ID from Google Sheets.
-   - If matched, the bot assigns a corresponding Discord role.
-5. **Console logs** are printed inside GitHub Actions for transparency and debugging.
+| Contribution Type | Threshold | Discord Role Example     |
+|-------------------|-----------|---------------------------|
+| PRs               | 1         | 🔧PR  Code Initiate       |
+| PRs               | 5         | 🔩PR Merge Apprentice     |
+| PRs               | 10        | ⚙️ Pull Request Pro       |
+| Issues            | 1         | 🧐 Issue Reporter         |
+| Issues            | 5         | 🔍 Issue Investigator     |
+| Commits           | 1         | 🔁 Commit Pushed          |
+| Commits           | 15        | 🗂️ Commit Champion        |
 
 
----
+### 🛠 Slash Commands
 
-### 📌 Status & Future Scope
+| Command                                | Description                                                   |
+|----------------------------------------|---------------------------------------------------------------|
+| `/verify`                              | Sends the user a GitHub OAuth link to connect accounts.       |
+| `/contributions <discord_username>`    | Shows contribution stats for any Discord user.                |
 
-This is my work so far for **Feature 1: Automated Role Assignment**.  
-The GitHub ↔ Discord user mapping is currently stored in a **Google Sheet** using a service account for ease of setup and testing.
+### ⚙️ Setup for Organization
 
-#### 🔄 Future Scalability:
-- This mapping system is **temporary** and can be **migrated to a more scalable solution** such as:
-  - **Firebase Firestore**
-  - Or any other secure cloud-based database
+To use this system in **RUXAILAB** organization, you must set up the following secrets in the repository:
 
-This would enable real-time updates, advanced queries, and improved performance as the community scales.
+| Secret Name                  | Description                                                              |
+|-----------------------------|--------------------------------------------------------------------------|
+| `DISCORD_BOT_TOKEN`         | Token of your bot from Discord Developer Portal                          |
+| `DISCORD_CLIENT_ID`         | Client ID of your bot                                                    |
+| `GUILD_ID`                  | Discord server ID                                                        |
+| `FIREBASE_CREDENTIALS_JSON` | JSON string of your Firebase Admin SDK credentials                       |
+| `GH_CLIENT_ID`, `GH_CLIENT_SECRET` | GitHub OAuth App credentials                                      |
+| `ROLE_ID_PR_1`, `ROLE_ID_PR_5`, `ROLE_ID_PR_10`         | Role IDs for PR milestones                    |
+| `ROLE_ID_ISSUE_1`, `ROLE_ID_ISSUE_5`                   | Role IDs for issue milestones                |
+| `ROLE_ID_COMMIT_1`, `ROLE_ID_COMMIT_15`               | Role IDs for commit milestones               |
+
+### 🗂 Folder Structure & Major Files
+
+| File / Folder                            | Description                                                             |
+|------------------------------------------|-------------------------------------------------------------------------|
+| `.github/workflows/discord-role.yml`     | Main GitHub Actions workflow triggered on PR, issue, push              |
+| `scripts/assign_discord_role.js`         | Main script that determines and assigns roles                          |
+| `scripts/oauthServer.js`                 | Express server handling GitHub OAuth callback                          |
+| `scripts/discordBot.js`                  | Starts the bot and listens to slash commands                           |
+| `scripts/registerCommands.js`            | Registers slash commands to Discord                                    |
+| `utils/firestore.js`                     | Firebase Firestore setup and logic to save mappings & stats            |
+| `utils/githubStats.js`                   | Fetches contribution stats from GitHub API                             |
+| `utils/discordAPI.js`                    | Assigns Discord roles based on contribution counts                     |
+
+
+### 📹 Demo (Coming Soon)
+
+A short video will be added here demonstrating:
+
+- `/verify` flow with GitHub OAuth
+- `/contributions` command usage
+- Role assignment via GitHub Actions workflow on PR/Issue/Commit
+https://drive.google.com/file/d/1onHVW486p7pzkJ_WbuVmbDD_bT7hhcV0/view?usp=sharing
+
 
 Thank You 🙏
 
