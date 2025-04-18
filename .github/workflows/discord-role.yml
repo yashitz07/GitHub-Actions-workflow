@@ -19,6 +19,8 @@ on:
         required: true
       GUILD_ID:
         required: true
+      GH_STATS_TOKEN:
+        required: true
       ROLE_ID_PR_1:
         required: true
       ROLE_ID_PR_5:
