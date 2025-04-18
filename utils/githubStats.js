@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { saveGitHubStats, getGitHubUsername, getCachedStats  } = require('./firestore');
 
-const ORG_NAME = 'RUXAILAB';
+const ORG_NAME = 'yashitz07';
 
 async function fetchGitHubStats(discordId, forceRefresh = false) {
   const githubUsername = await getGitHubUsername(discordId);
