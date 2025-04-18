@@ -61,7 +61,7 @@ jobs:
         run: node scripts/assign_discord_role.js
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
+          FIREBASE_CREDENTIALS_JSON: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
           ACTOR: ${{ inputs.ACTOR }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
           GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
