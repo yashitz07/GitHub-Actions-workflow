@@ -1,37 +1,74 @@
 const axios = require("axios");
+const { fetchGitHubStats } = require("./githubStats");
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
 
-async function assignRole(discordId, event, action) {
-  let roleId, roleName;
+const PR_THRESHOLDS = [
+  { count: 10, roleId: process.env.ROLE_ID_PR_10 },
+  { count: 5, roleId: process.env.ROLE_ID_PR_5 },
+  { count: 1, roleId: process.env.ROLE_ID_PR_1 }
+];
 
-  if (event === "pull_request" && action === "closed") {
-    roleId = process.env.ROLE_ID_PR;
-    roleName = "PR raised";
-  } else if (event === "issues" && action === "opened") {
-    roleId = process.env.ROLE_ID_ISSUE;
-    roleName = "issue opened";
-  } else if (event === "push") {
-    roleId = process.env.ROLE_ID_COMMIT;
-    roleName = "Commit Pushed";
-  } else {
-    console.log(" No role assigned for this event.");
-    return;
+const ISSUE_THRESHOLDS = [
+  { count: 5, roleId: process.env.ROLE_ID_ISSUE_5 },
+  { count: 1, roleId: process.env.ROLE_ID_ISSUE_1 }
+];
+
+const COMMIT_THRESHOLDS = [
+  { count: 15, roleId: process.env.ROLE_ID_COMMIT_15 },
+  { count: 1, roleId: process.env.ROLE_ID_COMMIT_5 }
+];
+
+async function assignRole(discordId, event, action) {
+  const headers = { Authorization: `Bot ${DISCORD_BOT_TOKEN}` };
+
+  let discordUsername = discordId;
+  try {
+    const userRes = await axios.get(`https://discord.com/api/v10/users/${discordId}`, { headers });
+    discordUsername = `${userRes.data.username}#${userRes.data.discriminator}`;
+  } catch (err) {
+    console.warn("⚠️ Couldn't fetch Discord username.");
   }
 
-  const roleUrl = `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${roleId}`;
-  const userUrl = `https://discord.com/api/v10/users/${discordId}`;
-  const headers = { Authorization: `Bot ${DISCORD_BOT_TOKEN}`, "Content-Type": "application/json" };
+  // Fetch contribution stats from Firestore (cache)
+  const { prs, issues, commits } = await fetchGitHubStats(discordId, false);
+  const assignments = [];
 
-  try {
-    const userRes = await axios.get(userUrl, { headers });
-    const discordUsername = userRes.data.username + "#" + userRes.data.discriminator;
+  if (event === "pull_request" && action === "closed") {
+    for (const tier of PR_THRESHOLDS) {
+      if (prs >= tier.count) {
+        await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`, {}, { headers });
+        assignments.push(`🛠️ PR Tier ${tier.count}+`);
+        break;
+      }
+    }
+  }
 
-    await axios.put(roleUrl, {}, { headers });
-    console.log(`✅ Role "${roleName}" assigned to Discord user: ${discordUsername} (${discordId})`);
-  } catch (error) {
-    console.error("❌ Error assigning role:", error.response?.data || error.message);
+  if (event === "issues" && action === "opened") {
+    for (const tier of ISSUE_THRESHOLDS) {
+      if (issues >= tier.count) {
+        await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`, {}, { headers });
+        assignments.push(`🐛 Issue Tier ${tier.count}+`);
+        break;
+      }
+    }
+  }
+
+  if (event === "push") {
+    for (const tier of COMMIT_THRESHOLDS) {
+      if (commits >= tier.count) {
+        await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`, {}, { headers });
+        assignments.push(`💾 Commit Tier ${tier.count}+`);
+        break;
+      }
+    }
+  }
+
+  if (assignments.length > 0) {
+    console.log(`✅ Assigned to ${discordUsername}: ${assignments.join(", ")}`);
+  } else {
+    console.log(`ℹ️ No roles assigned to ${discordUsername} for this event.`);
   }
 }
 

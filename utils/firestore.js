@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 const axios = require('axios');
-const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS_JSON);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
@@ -60,9 +60,25 @@ async function getGitHubUsername(discordId) {
   return githubUsername;
 }
 
+async function saveGitHubStats(discordId, stats) {
+  await collection.doc(discordId).set({
+    stats,
+  }, { merge: true });
+  console.log(`📦 Stats cached in Firestore for ${discordId}`);
+}
+
+async function getCachedStats(discordId) {
+  const doc = await collection.doc(discordId).get();
+  if (!doc.exists || !doc.data().stats) return null;
+  return doc.data().stats;
+}
+
+
 module.exports = {
   setMapping,
   getDiscordId,
   getGitHubUsername,
-  getDiscordUsername
+  getDiscordUsername,
+  saveGitHubStats,
+  getCachedStats
 };

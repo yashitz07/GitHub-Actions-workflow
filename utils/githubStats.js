@@ -1,14 +1,19 @@
 const axios = require('axios');
-const { getGitHubUsername } = require('./firestore');
+const { saveGitHubStats, getGitHubUsername, getCachedStats  } = require('./firestore');
 
 const ORG_NAME = 'RUXAILAB';
 
-async function fetchGitHubStats(discordId) {
+async function fetchGitHubStats(discordId, forceRefresh = false) {
   const githubUsername = await getGitHubUsername(discordId);
-  if (!githubUsername) {
-    throw new Error(`GitHub username not found for Discord ID: ${discordId}`);
-  }
+  if (!githubUsername) throw new Error(`GitHub not linked for Discord ID: ${discordId}`);
 
+  if (!forceRefresh) {
+    const cached = await getCachedStats(discordId);
+    if (cached) {
+      console.log("📄 Using cached stats");
+      return { ...cached, githubUsername };
+    }
+  }
   const headers = {
     Accept: 'application/vnd.github+json',
     Authorization: `Bearer ${process.env.GH_STATS_TOKEN}`
@@ -37,7 +42,10 @@ async function fetchGitHubStats(discordId) {
     }
   }
 
-  return { prs, issues, commits, githubUsername };
+  const stats = { prs, issues, commits, lastUpdated: new Date().toISOString() };
+  await saveGitHubStats(discordId, stats);
+
+  return { ...stats, githubUsername };
 }
 
 module.exports = { fetchGitHubStats };
