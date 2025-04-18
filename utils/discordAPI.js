@@ -35,7 +35,7 @@ async function assignRole(discordId, event, action) {
   const { prs, issues, commits } = await fetchGitHubStats(discordId, false);
   const assignments = [];
 
-  if (event === "pull_request" && action === "closed") {
+  if (event === "pull_request" && action === "opened") {
     for (const tier of PR_THRESHOLDS) {
       if (prs >= tier.count) {
         await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`, {}, { headers });
