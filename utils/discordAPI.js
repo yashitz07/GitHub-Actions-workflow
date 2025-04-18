@@ -33,7 +33,6 @@ async function assignRole(discordId, event, action,  forceRefresh = false) {
 
   // Fetch contribution stats from Firestore (cache)
   const { prs, issues, commits } = await fetchGitHubStats(discordId, forceRefresh);
-  console.log(`📊 Stats for ${discordUsername}: PRs=${prs}, Issues=${issues}, Commits=${commits}`);
   const assignments = [];
 
   if (event === "pull_request" && action === "opened") {
@@ -42,7 +41,6 @@ async function assignRole(discordId, event, action,  forceRefresh = false) {
         console.log(`💾 Matched pr Tier ${tier.count}+ → assigning role: ${tier.roleId}`);
         await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`, {}, { headers });
         assignments.push(`🛠️ PR Tier ${tier.count}+`);
-        console.log(`pushed role ${tier.roleId} to ${discordId}`);
         break;
       }
     }
@@ -64,13 +62,11 @@ async function assignRole(discordId, event, action,  forceRefresh = false) {
         console.log(`💾 Matched Commit Tier ${tier.count}+ → assigning role: ${tier.roleId}`);
         await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}, {}, { headers }`);
         assignments.push(`💾 Commit Tier ${tier.count}+`);
-        console.log(`commit role ${tier.roleId} to ${discordId}`);
         break;
       }
     }
   }
   
-  console.log(assignments.length);
   if (assignments.length > 0) {
     console.log(`✅ Assigned to ${discordUsername}: ${assignments.join(", ")}`);
   } else {

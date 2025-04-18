@@ -64,7 +64,7 @@ async function saveGitHubStats(discordId, stats) {
   await collection.doc(discordId).set({
     stats,
   }, { merge: true });
-  console.log(`📦 Stats cached in Firestore for ${discordId}`);
+  console.log(`📦 Stats cached in Firestore`);
 }
 
 async function getCachedStats(discordId) {
