@@ -55,15 +55,23 @@ async function assignRole(discordId, event, action) {
     }
   }
 
-  if (event === "push") {
+  if (
+    event === "push" ||
+    (event === "pull_request" && (action === "opened" || action === "closed"))
+  ) {
     for (const tier of COMMIT_THRESHOLDS) {
       if (commits >= tier.count) {
-        await axios.put(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`, {}, { headers });
+        await axios.put(
+          `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordId}/roles/${tier.roleId}`,
+          {},
+          { headers }
+        );
         assignments.push(`💾 Commit Tier ${tier.count}+`);
         break;
       }
     }
   }
+  
 
   if (assignments.length > 0) {
     console.log(`✅ Assigned to ${discordUsername}: ${assignments.join(", ")}`);
