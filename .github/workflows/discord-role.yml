@@ -1,20 +1,48 @@
 name: Assign Discord Role (Local Test)
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [closed]
-  issues:
-    types: [opened]
+  workflow_call:
+    inputs:
+      ACTOR:
+        required: true
+        type: string
+      GITHUB_EVENT_NAME:
+        required: true
+        type: string
+      GITHUB_EVENT_ACTION:
+        required: true
+        type: string
+    secrets:
+      DISCORD_BOT_TOKEN:
+        required: true
+      FIREBASE_CREDENTIALS_JSON:
+        required: true
+      GUILD_ID:
+        required: true
+      ROLE_ID_PR_1:
+        required: true
+      ROLE_ID_PR_5:
+        required: true
+      ROLE_ID_PR_10:
+        required: true
+      ROLE_ID_ISSUE_1:
+        required: true
+      ROLE_ID_ISSUE_5:
+        required: true
+      ROLE_ID_COMMIT_1:
+        required: true
+      ROLE_ID_COMMIT_15:
+        required: true
 
 jobs:
   assign-role:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (GitHub-Actions-workflow)
         uses: actions/checkout@v4
+        with:
+          repository: yashitz07/GitHub-Actions-workflow
+          ref: main  # Ensure it's fetching the correct branch
 
       - name: Debug Repository Structure
         run: ls -R
@@ -31,9 +59,10 @@ jobs:
         run: node scripts/assign_discord_role.js
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          FIREBASE_CREDENTIALS_JSON: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
-          ACTOR: ${{ github.actor }}
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
+          ACTOR: ${{ inputs.ACTOR }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
           ROLE_ID_PR_1: ${{ secrets.ROLE_ID_PR_1 }}
           ROLE_ID_PR_5: ${{ secrets.ROLE_ID_PR_5 }}
           ROLE_ID_PR_10: ${{ secrets.ROLE_ID_PR_10 }}
@@ -41,6 +70,6 @@ jobs:
           ROLE_ID_ISSUE_5: ${{ secrets.ROLE_ID_ISSUE_5 }}
           ROLE_ID_COMMIT_1: ${{ secrets.ROLE_ID_COMMIT_1 }}
           ROLE_ID_COMMIT_15: ${{ secrets.ROLE_ID_COMMIT_15 }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-          GITHUB_EVENT_ACTION: ${{ github.event.action || '' }}
-          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+          GITHUB_EVENT_NAME: ${{ inputs.GITHUB_EVENT_NAME }}
+          GITHUB_EVENT_ACTION: ${{ inputs.GITHUB_EVENT_ACTION }}
+          
