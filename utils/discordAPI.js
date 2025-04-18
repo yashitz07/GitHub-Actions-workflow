@@ -20,7 +20,7 @@ const COMMIT_THRESHOLDS = [
   { count: 1, roleId: process.env.ROLE_ID_COMMIT_5 }
 ];
 
-async function assignRole(discordId, event, action) {
+async function assignRole(discordId, event, action,  forceRefresh = false) {
   const headers = { Authorization: `Bot ${DISCORD_BOT_TOKEN}` };
 
   let discordUsername = discordId;
@@ -32,7 +32,7 @@ async function assignRole(discordId, event, action) {
   }
 
   // Fetch contribution stats from Firestore (cache)
-  const { prs, issues, commits } = await fetchGitHubStats(discordId, false);
+  const { prs, issues, commits } = await fetchGitHubStats(discordId, forceRefresh);
   const assignments = [];
 
   if (event === "pull_request" && action === "closed") {

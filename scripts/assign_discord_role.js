@@ -13,7 +13,7 @@ async function main() {
   const discordId = await getDiscordId(ACTOR);
   if (!discordId) return console.error(`❌ No Discord ID found for ${ACTOR}`);
 
-  await assignRole(discordId, EVENT_NAME, EVENT_ACTION);
+  await assignRole(discordId, EVENT_NAME, EVENT_ACTION, true);
 }
 
 main();
