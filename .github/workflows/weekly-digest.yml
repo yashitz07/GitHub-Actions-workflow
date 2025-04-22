@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout GitHub-Actions-workflow
         uses: actions/checkout@v4
+        with:
+          repository: yashitz07/GitHub-Actions-workflow
+          ref: main 
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
