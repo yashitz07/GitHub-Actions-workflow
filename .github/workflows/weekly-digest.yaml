@@ -1,0 +1,39 @@
+name: Weekly Digest Report
+
+on:
+  workflow_call:
+    secrets:
+      DISCORD_BOT_TOKEN:
+        required: true
+      FIREBASE_CREDENTIALS_JSON:
+        required: true
+      GUILD_ID:
+        required: true
+      GH_STATS_TOKEN:
+        required: true
+      WEEKLY_DIGEST_CHANNEL_ID:
+        required: true
+
+jobs:
+  send-weekly-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub-Actions-workflow
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Weekly Digest Script
+        run: node scripts/weeklyDigest.js
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          FIREBASE_CREDENTIALS_JSON: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
+          GUILD_ID: ${{ secrets.GUILD_ID }}
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+          WEEKLY_DIGEST_CHANNEL_ID: ${{ secrets.WEEKLY_DIGEST_CHANNEL_ID }}

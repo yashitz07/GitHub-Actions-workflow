@@ -7,6 +7,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 const collection = db.collection('github-discord-mapping');
+const weeklyCollection = db.collection('weekly-stats');
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
@@ -73,6 +74,38 @@ async function getCachedStats(discordId) {
   return doc.data().stats;
 }
 
+async function getAllUserMappings() {
+  const snapshot = await collection.get();
+  const users = [];
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (data.githubUsername && data.stats) {
+      users.push({
+        discordId: doc.id,
+        githubUsername: data.githubUsername,
+        stats: data.stats,
+      });
+    }
+  });
+
+  return users;
+}
+
+
+async function saveWeeklyStats(stats) {
+  const docId = new Date().toISOString().slice(0, 10); // e.g. 2025-04-21
+  console.log("🔥 Saving stats:", JSON.stringify(stats, null, 2));
+  await weeklyCollection.doc(docId).set({ data: stats });
+  console.log("📊 Weekly stats saved to Firestore");
+}
+
+async function getTopContributorsFromStats(stats) {
+  const topPR = stats.reduce((a, b) => a.prs > b.prs ? a : b, {});
+  const topIssue = stats.reduce((a, b) => a.issues > b.issues ? a : b, {});
+  const topCommit = stats.reduce((a, b) => a.commits > b.commits ? a : b, {});
+  return { topPR, topIssue, topCommit };
+}
 
 module.exports = {
   setMapping,
@@ -80,5 +113,8 @@ module.exports = {
   getGitHubUsername,
   getDiscordUsername,
   saveGitHubStats,
-  getCachedStats
+  getCachedStats,
+  getAllUserMappings,
+  saveWeeklyStats,
+  getTopContributorsFromStats,
 };
