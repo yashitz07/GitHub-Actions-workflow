@@ -76,6 +76,11 @@ A short video will be added here demonstrating:
 - Role assignment via GitHub Actions workflow on PR/Issue/Commit
 https://drive.google.com/file/d/1onHVW486p7pzkJ_WbuVmbDD_bT7hhcV0/view?usp=sharing
 
+While doing this project work I have tried to maintain some of the things keeping it with respect to organization or companies perspective like:
+- I have tried to follow a well-structured, modular Node.js implementation ensuring scalability and clean project structure.
+- Implements proper error handling and detailed logging across all modules for easy debugging and reliability.
+- Keep focused on code reusability and extensibility to easily add more features in the future.
+- Introduced exciting features like real-time contribution stats and automated Weekly Digests to boost engagement in the RUXAILAB community.
 
 Thank You 🙏
 
