@@ -54,21 +54,9 @@ const Demo = () => {
           <Card className="overflow-hidden">
             <CardContent className="p-0">
               <div className="relative bg-gray-900 aspect-video flex items-center justify-center">
-                {/* Placeholder for demo video */}
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Play className="w-10 h-10 text-white ml-1" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Demo Video</h3>
-                  <p className="text-gray-300 mb-4">Complete workflow demonstration</p>
-                  <Button className="bg-blue-600 hover:bg-blue-700">
-                    <Play className="w-4 h-4 mr-2" />
-                    Watch Demo
-                  </Button>
-                </div>
                 
                 {/* YouTube embed would go here */}
-                <iframe width="560" height="315"
+                <iframe width="100%" height="100%"
                         src="https://www.youtube.com/embed/HxevzBryUqA"
                         frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen>
