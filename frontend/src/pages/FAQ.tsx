@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { AlertCircle, HelpCircle, MessageSquare, ExternalLink, CheckCircle, XCircle } from "lucide-react";
+import { AlertCircle, HelpCircle,MessageSquare, ExternalLink, CheckCircle, XCircle, Linkedin } from "lucide-react";
 
 const FAQ = () => {
   const faqCategories = [
@@ -285,20 +285,24 @@ const FAQ = () => {
               </h2>
               <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
                 Can't find the answer you're looking for? Check out these additional resources 
-                or reach out to the community for support.
+                or reach out to Yash Patel.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/yashitz07/GSOC-25-Ruxailab/issues" target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="w-4 h-4 mr-2" />
                     GitHub Issues
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Discord Community
+                  <a
+                    href="https://www.linkedin.com/in/yash-patel-882307252/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Linkedin className="w-4 h-4 mr-2" />
+                      Connect on LinkedIn
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="lg">

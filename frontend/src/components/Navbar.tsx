@@ -83,7 +83,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <Button asChild className="mt-4 bg-gradient-to-r from-blue-600 to-purple-600">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/yashitz07/GSOC-25-Ruxailab/" target="_blank" rel="noopener noreferrer">
                   <Github className="w-4 h-4 mr-2" />
                   GitHub
                 </a>

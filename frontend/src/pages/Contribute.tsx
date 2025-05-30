@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, ExternalLink, Heart, Code, BookOpen, Bug, Star, GitPullRequest, Users, Coffee } from "lucide-react";
+import { Github, ExternalLink, Heart, Code, BookOpen, Bug, Star, GitPullRequest, Users, Coffee, Linkedin, Mail } from "lucide-react";
 
 const Contribute = () => {
   const contributionTypes = [
@@ -79,7 +79,7 @@ const Contribute = () => {
             Contribute to GitCord
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Help us build the best Discord-GitHub integration for open-source communities. 
+            Help me build the best Discord-GitHub integration for open-source communities. 
             Every contribution, big or small, makes a difference!
           </p>
         </div>
@@ -118,7 +118,7 @@ const Contribute = () => {
                   Fork the repository and clone it to your local machine to start developing.
                 </p>
                 <Button asChild variant="outline" size="sm" className="w-full">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/yashitz07/GSOC-25-Ruxailab/" target="_blank" rel="noopener noreferrer">
                     <Github className="w-4 h-4 mr-2" />
                     Fork Repository
                   </a>
@@ -138,7 +138,7 @@ const Contribute = () => {
                   Browse open issues and pick one that matches your skills and interests.
                 </p>
                 <Button asChild variant="outline" size="sm" className="w-full">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/yashitz07/GSOC-25-Ruxailab/issues" target="_blank" rel="noopener noreferrer">
                     <Bug className="w-4 h-4 mr-2" />
                     Browse Issues
                   </a>
@@ -158,7 +158,7 @@ const Contribute = () => {
                   Make your changes, test thoroughly, and submit a pull request for review.
                 </p>
                 <Button asChild variant="outline" size="sm" className="w-full">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/yashitz07/GSOC-25-Ruxailab/pulls" target="_blank" rel="noopener noreferrer">
                     <GitPullRequest className="w-4 h-4 mr-2" />
                     Create PR
                   </a>
@@ -199,43 +199,52 @@ const Contribute = () => {
           </div>
         </div>
 
-        {/* Good First Issues */}
+        {/* Future Scalability */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            Good First Issues
+            Future Scalability & Feature Roadmap
           </h2>
-          
+
           <div className="space-y-4">
-            {goodFirstIssues.map((issue, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
+            {[
+              {
+                title: "Pull Request Management",
+                description:
+                  "Automate review requests, label categorization, and Discord channel notifications for incoming PRs.",
+                tags: ["Automation", "PR Handling", "Labeling"],
+              },
+              {
+                title: "Advanced Collaborator Analytics",
+                description:
+                  "Visualize contributor data with charts, trends, and historical contribution heatmaps inside Discord.",
+                tags: ["Analytics", "Data Visualization", "History"],
+              },
+              {
+                title: "Customizable GitHub Actions",
+                description:
+                  "Allow maintainers to define custom rules for workflow runs like CI/CD triggers, auto-merge conditions, and more.",
+                tags: ["CI/CD", "Custom Rules", "Workflow"],
+              },
+              {
+                title: "Weekly Digest Extensions",
+                description:
+                  "Support digest customization per team or module and allow opt-in summaries per user.",
+                tags: ["Digest", "Modular", "User Preferences"],
+              },
+            ].map((feature, idx) => (
+              <Card key={idx} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">{issue.title}</h3>
-                        <Badge 
-                          variant={issue.difficulty === 'Easy' ? 'default' : 'secondary'}
-                          className={issue.difficulty === 'Easy' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}
-                        >
-                          {issue.difficulty}
-                        </Badge>
-                      </div>
-                      <p className="text-gray-600 mb-3">{issue.description}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                      <p className="text-gray-600 mb-3">{feature.description}</p>
                       <div className="flex flex-wrap gap-2">
-                        {issue.labels.map((label, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
-                            {label}
+                        {feature.tags.map((tag, i) => (
+                          <Badge key={i} variant="outline" className="text-xs">
+                            {tag}
                           </Badge>
                         ))}
                       </div>
-                    </div>
-                    <div className="mt-4 md:mt-0 md:ml-6">
-                      <Button asChild variant="outline" size="sm">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View Issue
-                        </a>
-                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -243,6 +252,7 @@ const Contribute = () => {
             ))}
           </div>
         </div>
+
 
         {/* Contribution Guidelines */}
         <div className="mb-16">
@@ -318,20 +328,30 @@ const Contribute = () => {
             Ready to Contribute?
           </h2>
           <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-            Join our community of contributors and help make GitCord better for everyone. 
+            Let make GitCord better for everyone. 
             Every contribution is valued and appreciated!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-gray-50">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/yashitz07/GSOC-25-Ruxailab/" target="_blank" rel="noopener noreferrer">
                 <Github className="w-4 h-4 mr-2" />
                 Start Contributing
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
-              <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
-                <Users className="w-4 h-4 mr-2" />
-                Join Discord
+            <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-gray-50">
+                  <a
+                    href="https://www.linkedin.com/in/yash-patel-882307252/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Linkedin className="w-4 h-4 mr-2" />
+                      Connect on LinkedIn
+                  </a>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-gray-50">
+              <a href="mailto:yashitz07@gmail.com" target="_blank" rel="noopener noreferrer">
+                <Mail className="w-4 h-4 mr-2" />
+                Email Me
               </a>
             </Button>
           </div>
