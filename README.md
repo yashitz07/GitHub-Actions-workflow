@@ -13,7 +13,7 @@ This project automates Discord role assignment and provides GitHub contribution 
 | ⚡ Cached Contribution Stats | Uses Firestore to cache GitHub stats for faster role assignment.            |
 | ☁️ Cloud Firestore Integration | Stores GitHub–Discord mapping and contribution history.                    |
 | 🧾 Slack-like Slash Commands | Easy `/verify` and `/contributions` commands for users.                     |
-
+| 📢 Weekly Digest            | Posts a weekly summary every Sunday at 9AM showing top contributors of the week. |
 ---
 
 ### 📌 Role Assignment Table
@@ -50,16 +50,18 @@ To use this system in **RUXAILAB** organization, you must set up the following s
 | `ROLE_ID_PR_1`, `ROLE_ID_PR_5`, `ROLE_ID_PR_10`         | Role IDs for PR milestones                    |
 | `ROLE_ID_ISSUE_1`, `ROLE_ID_ISSUE_5`                   | Role IDs for issue milestones                |
 | `ROLE_ID_COMMIT_1`, `ROLE_ID_COMMIT_15`               | Role IDs for commit milestones               |
-
+| `WEEKLY_DIGEST_CHANNEL_ID`               | Channel ID where weekly digest message should be posted               |
 ### 🗂 Folder Structure & Major Files
 
 | File / Folder                            | Description                                                             |
 |------------------------------------------|-------------------------------------------------------------------------|
 | `.github/workflows/discord-role.yml`     | Main GitHub Actions workflow triggered on PR, issue, push              |
+| `.github/workflows/weekly-digest.yml`     | Workflow that triggers the weekly digest report on Sundays              |
 | `scripts/assign_discord_role.js`         | Main script that determines and assigns roles                          |
 | `scripts/oauthServer.js`                 | Express server handling GitHub OAuth callback                          |
 | `scripts/discordBot.js`                  | Starts the bot and listens to slash commands                           |
 | `scripts/registerCommands.js`            | Registers slash commands to Discord                                    |
+| `scripts/weeklyDigest.js`            | Posts weekly contributor highlights every Sunday at 9 AM                                     |
 | `utils/firestore.js`                     | Firebase Firestore setup and logic to save mappings & stats            |
 | `utils/githubStats.js`                   | Fetches contribution stats from GitHub API                             |
 | `utils/discordAPI.js`                    | Assigns Discord roles based on contribution counts                     |
@@ -74,6 +76,11 @@ A short video will be added here demonstrating:
 - Role assignment via GitHub Actions workflow on PR/Issue/Commit
 https://drive.google.com/file/d/1onHVW486p7pzkJ_WbuVmbDD_bT7hhcV0/view?usp=sharing
 
+While doing this project work I have tried to maintain some of the things keeping it with respect to organization or companies perspective like:
+- I have tried to follow a well-structured, modular Node.js implementation ensuring scalability and clean project structure.
+- Implements proper error handling and detailed logging across all modules for easy debugging and reliability.
+- Keep focused on code reusability and extensibility to easily add more features in the future.
+- Introduced exciting features like real-time contribution stats and automated Weekly Digests to boost engagement in the RUXAILAB community.
 
 Thank You 🙏
 
